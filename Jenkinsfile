@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = 'docker.io/attiq2/devops-node-app'
+        IMAGE_NAME = 'docker.io/attiq1124/devops-node-app'
         KUBECONFIG = '/var/lib/jenkins/.kube/config'
     }
 
@@ -52,4 +52,5 @@ pipeline {
         }
     }
 }
+
 
