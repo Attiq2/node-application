@@ -1,5 +1,6 @@
 pipeline {
     agent any
+
     environment {
         KUBECONFIG = '/var/lib/jenkins/.kube/config'
     }
@@ -11,7 +12,6 @@ pipeline {
             }
         }
 
-        // 🔍 ADD THIS DEBUG STAGE HERE
         stage('Docker Debug') {
             steps {
                 sh '''
@@ -28,8 +28,17 @@ pipeline {
             }
         }
 
-        // (Your other stages here...)
+        stage('Push to Docker Hub') {
+            steps {
+                sh 'docker push Attiq2/devops-node-app'
+            }
+        }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                sh 'kubectl apply -f deployment.yml'
+            }
+        }
     }
 }
-
 
