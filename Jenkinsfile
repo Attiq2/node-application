@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         DOCKER_IMAGE = 'Attiq2/devops-node-app'
+        KUBECONFIG = '/var/lib/jenkins/.kube/config'
     }
 
     stages {
