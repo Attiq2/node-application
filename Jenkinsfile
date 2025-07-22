@@ -1,45 +1,35 @@
 pipeline {
     agent any
-
     environment {
         KUBECONFIG = '/var/lib/jenkins/.kube/config'
     }
 
     stages {
-        stage('Clone') {
+        stage('Checkout') {
             steps {
                 git 'https://github.com/Attiq2/node-application.git'
             }
         }
 
-        stage('Check Docker Access') {
+        // 🔍 ADD THIS DEBUG STAGE HERE
+        stage('Docker Debug') {
             steps {
-                sh 'docker ps'
+                sh '''
+                    echo "User: $(whoami)"
+                    echo "Groups: $(groups)"
+                    docker ps
+                '''
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t attiq2/devops-node-app .'
+                sh 'docker build -t Attiq2/devops-node-app .'
             }
         }
 
-        stage('Push to Docker Hub') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'docker-hub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                    sh '''
-                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-                        docker push attiq2/devops-node-app
-                    '''
-                }
-            }
-        }
-
-        stage('Deploy to Kubernetes') {
-            steps {
-                sh 'kubectl apply -f k8s/deployment.yaml'
-            }
-        }
+        // (Your other stages here...)
     }
 }
+
 
