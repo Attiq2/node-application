@@ -45,6 +45,25 @@ pipeline {
             }
         }
 
+        stage('Kubernetes Debug Info') {
+            steps {
+                sh '''
+                    echo "🔍 Kubernetes Debug Info"
+                    echo "Running as: $(whoami)"
+                    echo "Using kubeconfig: $KUBECONFIG"
+                    ls -la $KUBECONFIG
+                    echo "🔸 Config View"
+                    kubectl config view
+                    echo "🔸 Current Context"
+                    kubectl config current-context
+                    echo "🔸 Get Nodes"
+                    kubectl get nodes
+                    echo "🔸 Get Pods (all namespaces)"
+                    kubectl get pods -A
+                '''
+            }
+        }
+
         stage('Deploy to Kubernetes') {
             steps {
                 sh 'kubectl apply -f deployment.yml'
@@ -52,4 +71,3 @@ pipeline {
         }
     }
 }
-
