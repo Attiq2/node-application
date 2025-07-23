@@ -20,6 +20,9 @@ pipeline {
                     echo "🔍 Docker Debug Info"
                     echo "User: $(whoami)"
                     echo "Groups: $(groups)"
+                    echo "User ID Info:"
+                    id
+                    echo "Checking Docker containers:"
                     docker ps
                 '''
             }
@@ -45,21 +48,21 @@ pipeline {
             }
         }
 
-        stage('Kubernetes Debug Info') {
+        stage('Kube Debug') {
             steps {
                 sh '''
-                    echo "🔍 Kubernetes Debug Info"
-                    echo "Running as: $(whoami)"
-                    echo "Using kubeconfig: $KUBECONFIG"
-                    ls -la $KUBECONFIG
-                    echo "🔸 Config View"
-                    kubectl config view
-                    echo "🔸 Current Context"
-                    kubectl config current-context
-                    echo "🔸 Get Nodes"
-                    kubectl get nodes
-                    echo "🔸 Get Pods (all namespaces)"
-                    kubectl get pods -A
+                    echo "🔍 Kube Config Debug Info"
+                    echo "KUBECONFIG=$KUBECONFIG"
+                    echo "Current user: $(whoami)"
+                    id
+                    echo "Environment Variables:"
+                    env
+                    echo "Checking permissions:"
+                    ls -l /var/lib/jenkins/.kube/config || true
+                    ls -l /root/.minikube/ca.crt || true
+                    ls -l /root/.minikube/profiles/minikube/client.key || true
+                    echo "kubectl config view:"
+                    kubectl config view || true
                 '''
             }
         }
